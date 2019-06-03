@@ -1,0 +1,55 @@
+syntax = 'proto3';
+package usecase;
+service UserService {
+    rpc Create(User) returns (Response){}
+    rpc Get (Getrequest) returns (GetResponse){}
+    rpc GetAll(Request) returns (GetAllResonse){}
+    // rpc update (User) returns (Response){}
+    // rpc Delete (User) returns (DeleteResponse){}
+    rpc Auth (User) returns (Token){};
+    rpc ValidateToken (Token) returns (Token){};
+}
+
+message Getrequest{
+    int32 Id = 1;
+}
+message Request{}
+
+message User{
+    int32 id =1;
+    string name =2;
+    string email =3;
+    string password =4;
+    string token =5;
+
+}
+message Response {
+    User user = 1;
+    Token token =2;
+
+}
+message GetResponse {
+    User user = 1;
+    Token token =2;
+
+}
+message GetAllResonse {
+    repeated User users = 1;
+    Token token =2;
+
+
+}
+message DeleteResponse {
+    bool success = 1;
+    User user = 2;
+}
+message Token {
+    string token =1;
+    bool valid =2;
+    repeated Error error =3;
+
+}
+message Error{
+    int32 code =1;
+    string description =2;
+}

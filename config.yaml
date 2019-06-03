@@ -1,0 +1,11 @@
+database: 
+  dbname: user
+  host: localhost
+  password: password
+  port: 3306
+  username: root
+restgateway: 
+  grpcport: 9090
+  host: "127.0.0.1"
+  port: 8080
+

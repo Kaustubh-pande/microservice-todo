@@ -1,0 +1,11 @@
+type: google.api.Service
+config_version: 3
+http: 
+  rules:
+    - selector: usecase.UserService.Create
+      post: /v1/User/SignUp
+      body: "*"
+    - selector: usecase.UserService.GetAll
+      get: /v1/User/GetAll
+      
+      
