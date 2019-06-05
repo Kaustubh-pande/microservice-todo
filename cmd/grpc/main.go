@@ -27,12 +27,14 @@ func main() {
 		log.Fatalf("Could not connect to DB: %v", err)
 	}
 	db.AutoMigrate(&pb.User{})
+	db.AutoMigrate(&pb.Todo{})
 	repository := &repo.UserRepository{Db: db}
 	tokenService := &usecase.TokenService{Repo: repository}
+	// TodoRepo := repository
 	userService := &usecase.Service{Repo: repository, TokenService: tokenService}
-
+	todoService := &usecase.TodoService{TodoRepo: repository}
 	// Run the server
-	if err := server.StartGRPCServer(userService); err != nil {
+	if err := server.StartGRPCServer(userService, todoService); err != nil {
 		log.Fatalf("Could not start server: %v", err)
 	}
 }

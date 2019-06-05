@@ -1,0 +1,88 @@
+syntax = 'proto3';
+package usecase;
+import "google/protobuf/timestamp.proto";
+//import "time";
+service UserService {
+    rpc Create(User) returns (Response){};
+    rpc Get (Getrequest) returns (GetResponse){};
+    rpc GetAll(Request) returns (GetAllResponse){};
+    rpc Updateuser (User) returns (Response){};
+    rpc Deleteuser (User) returns (DeleteResponse){};
+    rpc Auth (User) returns (Token){};
+    rpc ValidateToken (Token) returns (Token){};
+}
+
+message Getrequest{
+    int32 Id = 1;
+}
+message Request{}
+
+message User{
+    int32 id =1;
+    string name =2;
+    string email =3;
+    string password =4;
+    string token =5;
+    string created_at=6;
+}
+message Response {
+    User user = 1;
+    Token token =2;
+
+}
+message GetResponse {
+    User user = 1;
+    Token token =2;
+
+}
+message GetAllResponse {
+    repeated User users = 1;
+    Token token =2;
+
+
+}
+message DeleteResponse {
+    bool success = 1;
+    User user = 2;
+}
+message Token {
+    string token =1;
+    bool valid =2;
+    repeated Error error =3;
+
+}
+message Error{
+    int32 code =1;
+    string description =2;
+}
+service TodoService{
+    rpc TodoCreate(Todo)returns(TodoResponse){};
+    rpc GetTodo (GetTodoRequest) returns (GetTodoResponse){};
+    rpc GetAllTodos(GetAllTodoRequest) returns (GetAllTodoResponse){};
+    rpc UpdateTodo(Todo)returns(TodoResponse){};
+    rpc DeleteTodo (Todo)returns(DeleteTodoResponse);
+}
+message Todo {
+    int32 id=1;
+    string task =2;
+    string created_at=3;
+    string updated_at=4;
+   // google.protobuf.Timestamp created_by=5;
+    
+}
+message DeleteTodoResponse{
+    bool message =1;
+}
+message TodoResponse {
+    Todo todo =1;
+}
+message GetTodoRequest{
+    int32 Id =1;
+}
+message GetTodoResponse{
+    Todo todo =1;
+}
+message GetAllTodoRequest{}
+message GetAllTodoResponse{
+    repeated Todo todos =1;
+}

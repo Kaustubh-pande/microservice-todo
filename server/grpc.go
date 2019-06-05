@@ -8,7 +8,7 @@ import (
 )
 
 //
-func StartGRPCServer(impl pb.UserServiceHandler) (err error) {
+func StartGRPCServer(impl pb.UserServiceHandler, impl1 pb.TodoServiceHandler) (err error) {
 
 	// Create a new service. Optionally include some options here.
 	srv := grpc.NewService(
@@ -24,7 +24,7 @@ func StartGRPCServer(impl pb.UserServiceHandler) (err error) {
 
 	// Register handler
 	pb.RegisterUserServiceMicroHandler(srv.Server(), impl)
-
+	pb.RegisterTodoServiceMicroHandler(srv.Server(), impl1)
 	return srv.Run()
 
 }

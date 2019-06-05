@@ -1,0 +1,176 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "usertodo.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "usecaseDeleteResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "user": {
+          "$ref": "#/definitions/usecaseUser"
+        }
+      }
+    },
+    "usecaseDeleteTodoResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "usecaseError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "usecaseGetAllResponse": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/usecaseUser"
+          }
+        },
+        "token": {
+          "$ref": "#/definitions/usecaseToken"
+        }
+      }
+    },
+    "usecaseGetAllTodoResponse": {
+      "type": "object",
+      "properties": {
+        "todos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/usecaseTodo"
+          }
+        }
+      }
+    },
+    "usecaseGetResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/usecaseUser"
+        },
+        "token": {
+          "$ref": "#/definitions/usecaseToken"
+        }
+      }
+    },
+    "usecaseGetTodoResponse": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "$ref": "#/definitions/usecaseTodo"
+        }
+      }
+    },
+    "usecaseResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/usecaseUser"
+        },
+        "token": {
+          "$ref": "#/definitions/usecaseToken"
+        }
+      }
+    },
+    "usecaseTodo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "task": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "usecaseTodoResponse": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "$ref": "#/definitions/usecaseTodo"
+        }
+      }
+    },
+    "usecaseToken": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "valid": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "error": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/usecaseError"
+          }
+        }
+      }
+    },
+    "usecaseUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

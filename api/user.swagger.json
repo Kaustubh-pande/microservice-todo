@@ -64,6 +64,26 @@
         }
       }
     },
+    "usecaseTodo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "task": {
+          "type": "string"
+        }
+      }
+    },
+    "usecaseTodoResponse": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "$ref": "#/definitions/usecaseTodo"
+        }
+      }
+    },
     "usecaseToken": {
       "type": "object",
       "properties": {
