@@ -6,7 +6,6 @@ package usecase
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	_ "github.com/golang/protobuf/ptypes/timestamp"
 	math "math"
 )
 
@@ -37,6 +36,7 @@ var _ server.Option
 type UserService interface {
 	Create(ctx context.Context, in *User, opts ...client.CallOption) (*Response, error)
 	Get(ctx context.Context, in *Getrequest, opts ...client.CallOption) (*GetResponse, error)
+	GetUserTodos(ctx context.Context, in *Getrequest, opts ...client.CallOption) (*GetAllTodoResponse, error)
 	GetAll(ctx context.Context, in *Request, opts ...client.CallOption) (*GetAllResponse, error)
 	Updateuser(ctx context.Context, in *User, opts ...client.CallOption) (*Response, error)
 	Deleteuser(ctx context.Context, in *User, opts ...client.CallOption) (*DeleteResponse, error)
@@ -75,6 +75,16 @@ func (c *userService) Create(ctx context.Context, in *User, opts ...client.CallO
 func (c *userService) Get(ctx context.Context, in *Getrequest, opts ...client.CallOption) (*GetResponse, error) {
 	req := c.c.NewRequest(c.name, "UserService.Get", in)
 	out := new(GetResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userService) GetUserTodos(ctx context.Context, in *Getrequest, opts ...client.CallOption) (*GetAllTodoResponse, error) {
+	req := c.c.NewRequest(c.name, "UserService.GetUserTodos", in)
+	out := new(GetAllTodoResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -137,6 +147,7 @@ func (c *userService) ValidateToken(ctx context.Context, in *Token, opts ...clie
 type UserServiceHandler interface {
 	Create(context.Context, *User, *Response) error
 	Get(context.Context, *Getrequest, *GetResponse) error
+	GetUserTodos(context.Context, *Getrequest, *GetAllTodoResponse) error
 	GetAll(context.Context, *Request, *GetAllResponse) error
 	Updateuser(context.Context, *User, *Response) error
 	Deleteuser(context.Context, *User, *DeleteResponse) error
@@ -148,6 +159,7 @@ func RegisterUserServiceMicroHandler(s server.Server, hdlr UserServiceHandler, o
 	type userService interface {
 		Create(ctx context.Context, in *User, out *Response) error
 		Get(ctx context.Context, in *Getrequest, out *GetResponse) error
+		GetUserTodos(ctx context.Context, in *Getrequest, out *GetAllTodoResponse) error
 		GetAll(ctx context.Context, in *Request, out *GetAllResponse) error
 		Updateuser(ctx context.Context, in *User, out *Response) error
 		Deleteuser(ctx context.Context, in *User, out *DeleteResponse) error
@@ -171,6 +183,10 @@ func (h *userServiceHandler) Create(ctx context.Context, in *User, out *Response
 
 func (h *userServiceHandler) Get(ctx context.Context, in *Getrequest, out *GetResponse) error {
 	return h.UserServiceHandler.Get(ctx, in, out)
+}
+
+func (h *userServiceHandler) GetUserTodos(ctx context.Context, in *Getrequest, out *GetAllTodoResponse) error {
+	return h.UserServiceHandler.GetUserTodos(ctx, in, out)
 }
 
 func (h *userServiceHandler) GetAll(ctx context.Context, in *Request, out *GetAllResponse) error {

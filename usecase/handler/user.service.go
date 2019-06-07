@@ -6,8 +6,11 @@ import (
 	"log"
 	"strconv"
 
+	//model "github.com/PandeKaustubhS/microservice-todo/model"
 	repos "github.com/PandeKaustubhS/microservice-todo/repository"
 	pb "github.com/PandeKaustubhS/microservice-todo/usecase/user"
+	//res "github.com/PandeKaustubhS/microservice-todo/repository/res"
+
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/net/context"
 )
@@ -29,9 +32,12 @@ func (srv *Service) Create(ctx context.Context, req *pb.User, res *pb.Response) 
 		return errors.New(fmt.Sprintf("error hashing password: %v", err))
 	}
 	req.Password = string(hashedPass)
-	if err := srv.Repo.Create(req); err != nil {
+	log.Println("In create1")
+
+	if _,err := srv.Repo.Create(req); err != nil {
 		return errors.New(fmt.Sprintf("error creating user: %v", err))
 	}
+	log.Println("In create2")
 
 	token, err := srv.TokenService.Encode(req)
 	if err != nil {
@@ -151,7 +157,7 @@ func (srv *Service) Deleteuser(ctx context.Context, req *pb.User, res *pb.Delete
 //todo
 func (srv *TodoService) TodoCreate(ctx context.Context, req *pb.Todo, res *pb.TodoResponse) error {
 	log.Println("Creating todo")
-	err := srv.TodoRepo.TodoCreate(req)
+	_,err := srv.TodoRepo.TodoCreate(req)
 	if err != nil {
 		return err
 	}
@@ -206,4 +212,18 @@ func (srv *TodoService) DeleteTodo(ctx context.Context, req *pb.Todo, res *pb.De
 
 	res.Message = true
 	return nil
+}
+
+
+func( srv *Service) GetUserTodos(ctx context.Context,  req *pb.Getrequest, res *pb.GetAllTodoResponse) error{
+	fmt.Println(req.Id)
+	resp, err := srv.Repo.GetUserTodos(req.Id)
+
+	if err != nil {
+		return err
+	}
+	fmt.Println(resp)
+	// res.User = resp.User
+	res.Todos = resp
+	return nil	
 }

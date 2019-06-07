@@ -1,21 +1,26 @@
 package repository
 
 import (
+	// "github.com/gogo/protobuf/proto"
+	model "github.com/PandeKaustubhS/microservice-todo/model"
 	pb "github.com/PandeKaustubhS/microservice-todo/usecase/user"
 	"github.com/jinzhu/gorm"
+	res "github.com/PandeKaustubhS/microservice-todo/repository/res"
+	"log"
 )
 
 //
 type Repository interface {
 	Get(id int32) (*pb.User, error)
-	Create(user *pb.User) error
+	GetUserTodos(id int32) ([]*pb.Todo, error)
+	Create(user *pb.User)(*pb.User,error)
 	GetAll() ([]*pb.User, error)
 	Updateuser(user *pb.User) error
 	Deleteuser(*pb.User) error
 	GetByEmail(email string) (*pb.User, error)
 }
 type TodoRepository interface {
-	TodoCreate(todo *pb.Todo) error
+	TodoCreate(todo *pb.Todo) (*pb.Todo,error)
 	GetTodo(id int32) (*pb.Todo, error)
 	GetAllTodo() ([]*pb.Todo, error)
 	UpdateTodo(todo *pb.Todo) error
@@ -28,12 +33,18 @@ type UserRepository struct {
 }
 
 //create user
-func (repo *UserRepository) Create(user *pb.User) error {
-	if err := repo.Db.Create(user).Error; err != nil {
-		return err
+func (repo *UserRepository) Create(user *pb.User) (*pb.User,error) {
+	u:= model.User{Name:user.Name, Email:user.Email, Password:user.Password, Token:user.Token}
+	// log.Println("1")
 
+	// log.Println(readJSON(user, u))
+	
+	if err := repo.Db.Create(&u).Error; err != nil {
+		return nil,err
 	}
-	return nil
+	// log.Println("2")
+	u1 := res.Response(&u) 
+	return u1,nil
 }
 
 //getuser
@@ -50,21 +61,26 @@ func (repo *UserRepository) Get(id int32) (*pb.User, error) {
 
 //getall users
 func (repo *UserRepository) GetAll() ([]*pb.User, error) {
-	var users []*pb.User
+	var users []*model.User
 	if err := repo.Db.Find(&users).Error; err != nil {
 		return nil, err
 	}
-	return users, nil
+	response := []*pb.User{}
+	for _, v := range users {
+		response = append(response,res.Response(v))
+		}	
+		return response, nil
 }
 
 //getbyemail
-func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
-	user := &pb.User{}
-	if err := repo.Db.Where("email = ?", email).
+func (repo *UserRepository) GetByEmail(Email string) (*pb.User, error) {
+	user := &model.User{}
+	if err := repo.Db.Where("email = ?", Email).
 		First(&user).Error; err != nil {
 		return nil, err
 	}
-	return user, nil
+	res := res.Response(user)
+	return res, nil
 }
 
 //update user
@@ -73,6 +89,7 @@ func (repo *UserRepository) Updateuser(user *pb.User) error {
 		return err
 
 	}
+	
 	return nil
 }
 
@@ -86,13 +103,14 @@ func (repo *UserRepository) Deleteuser(user *pb.User) error {
 }
 
 //Todo create
-func (repo *UserRepository) TodoCreate(todo *pb.Todo) error {
-
-	if err := repo.Db.Create(todo).Error; err != nil {
-		return err
+func (repo *UserRepository) TodoCreate(todo *pb.Todo) (*pb.Todo,error) {
+	t:= model.Todo{Task:todo.Task,Uid:todo.Uid}
+	if err := repo.Db.Create(&t).Error; err != nil {
+		return nil,err
 
 	}
-	return nil
+	res := res.TodoResponse(&t)
+	return res,nil
 }
 func (repo *UserRepository) GetTodo(id int32) (*pb.Todo, error) {
 	repo.Db.LogMode(true)
@@ -122,4 +140,16 @@ func (repo *UserRepository) DeleteTodo(todo *pb.Todo) error {
 		return err
 	}
 	return nil
+}
+func (repo *UserRepository) GetUserTodos(id int32) ([]*pb.Todo, error) {
+	user := &model.User{}
+	var todos []*model.Todo
+	if err := repo.Db.Table("users").Where("users.id = ?", id).
+	First(&user).Related(&todos).Error; err != nil {
+		return nil, err
+	}
+	log.Println("Todos", todos)
+	repo.Db.LogMode(true)
+	// return user, nil
+	return nil, nil
 }

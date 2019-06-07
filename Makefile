@@ -10,6 +10,7 @@ rest:
 	# building rest gateway binary
 	$(GOBUILD) -o bin/rest cmd/rest/main.go
 #github.com/PandeKaustubhS/
+#--gorm_out=./usecase/user
 proto:
 	# compiling protobuffer code:
 	protoc --proto_path=api \

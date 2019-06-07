@@ -6,7 +6,7 @@ import (
 
 	"context"
 
-	"time"
+	//"time"
 
 	pb "github.com/PandeKaustubhS/microservice-todo/usecase/user"
 	"github.com/micro/go-grpc"
@@ -24,15 +24,17 @@ func main() {
 	email := "kau2345@gmail.com"
 	password := "kaukau1234"
 
-	//ts := timep.TimestampNow()
-	created_at := time.Now().Format("2006-01-02 15:04:05")
+	//ts := timep.TimestampNow().
+	//ts, err := timep.Timestamp(*timep.Timestamp)
+	//
+	//created_at := time.Now().Format("2006-01-02 15:04:05")
 	//create
 	r, err := client.Create(context.TODO(), &pb.User{
 		//Id:       id,
-		Name:      name,
-		Email:     email,
-		Password:  password,
-		CreatedAt: created_at,
+		Name:     name,
+		Email:    email,
+		Password: password,
+		//CreatedAt: ts, //created_at,
 	})
 	if err != nil {
 		log.Fatalf("Could not create member: %v", err)
@@ -42,8 +44,9 @@ func main() {
 	log.Println("==================================")
 	r1, err := clienttodo.TodoCreate(context.TODO(), &pb.Todo{
 		Task:      "test1",
-		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
-		UpdatedAt: time.Now().Format("2006-01-02 15:04:05"),
+		Uid:	1,
+		// CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
+		// UpdatedAt: time.Now().Format("2006-01-02 15:04:05"),
 	})
 	if err != nil {
 		log.Fatalf("Could not create todo: %v", err)
@@ -60,6 +63,9 @@ func main() {
 	log.Println("==================================")
 
 	//getall
+	log.Println("==================================")
+	log.Println("==========GetAll===================")
+
 	getAll, err := client.GetAll(context.Background(), &pb.Request{})
 	if err != nil {
 		log.Fatalf("Could not list users: %v", err)
@@ -144,4 +150,14 @@ func main() {
 	// }
 	// fmt.Println("delete user by id")
 	// log.Println(deleteuser)
+	log.Println("==================================")
+	r2, err := client.GetUserTodos(context.TODO(), &pb.Getrequest{
+		Id:	1,
+		// CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
+		// UpdatedAt: time.Now().Format("2006-01-02 15:04:05"),
+	})
+	if err != nil {
+		log.Fatalf("Could not create todo: %v", err)
+	}
+	fmt.Println("Related Todo :==>", r2)
 }

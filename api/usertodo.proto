@@ -1,10 +1,11 @@
 syntax = 'proto3';
 package usecase;
-import "google/protobuf/timestamp.proto";
+//import "google/protobuf/timestamp.proto";
 //import "time";
 service UserService {
     rpc Create(User) returns (Response){};
     rpc Get (Getrequest) returns (GetResponse){};
+    rpc GetUserTodos (Getrequest) returns (GetAllTodoResponse){};
     rpc GetAll(Request) returns (GetAllResponse){};
     rpc Updateuser (User) returns (Response){};
     rpc Deleteuser (User) returns (DeleteResponse){};
@@ -18,12 +19,14 @@ message Getrequest{
 message Request{}
 
 message User{
+   // option (gorm.opts).ormable = true;
     int32 id =1;
     string name =2;
     string email =3;
     string password =4;
     string token =5;
     string created_at=6;
+    //repeated User user =7;
 }
 message Response {
     User user = 1;
@@ -34,6 +37,10 @@ message GetResponse {
     User user = 1;
     Token token =2;
 
+}
+message GetUserResponse{
+    User user =1;
+    Todo todo = 2;
 }
 message GetAllResponse {
     repeated User users = 1;
@@ -63,12 +70,12 @@ service TodoService{
     rpc DeleteTodo (Todo)returns(DeleteTodoResponse);
 }
 message Todo {
+   // option (gorm.opts).ormable = true;
     int32 id=1;
     string task =2;
     string created_at=3;
     string updated_at=4;
-   // google.protobuf.Timestamp created_by=5;
-    
+    int32 uid=5;  // google.protobuf.Timestamp created_by=5;
 }
 message DeleteTodoResponse{
     bool message =1;

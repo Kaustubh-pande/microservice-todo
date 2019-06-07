@@ -5,7 +5,6 @@ import (
 
 	config "github.com/PandeKaustubhS/microservice-todo/config"
 	"github.com/jinzhu/gorm"
-
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
